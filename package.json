@@ -1,0 +1,19 @@
+{
+  "name": "rpc-ui",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "RPC UI using Preact",
+  "main": "index.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "preact": "^10.19.6"
+  },
+  "devDependencies": {
+    "@preact/preset-vite": "^2.8.1",
+    "vite": "^6.3.5"
+  }
+}
