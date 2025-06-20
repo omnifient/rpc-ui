@@ -1,18 +1,20 @@
 import { h } from 'preact';
 import { useState } from 'preact/hooks';
 import { sendRpcRequest, generateCurlCommand, parseHexResponse } from './utils/rpc';
+import { RpcHealth } from './components/RpcHealth';
 
 export function App() {
   const [rpcUrl, setRpcUrl] = useState('https://eth.llamarpc.com');
   const [method, setMethod] = useState('eth_blockNumber');
-  const [params, setParams] = useState('');
+  const [params, setParams] = useState('[]');
   const [response, setResponse] = useState(null);
   const [error, setError] = useState(null);
 
   const handleSendRequest = async () => {
     try {
       setError(null);
-      const data = await sendRpcRequest(rpcUrl, method, params);
+
+      const data = await sendRpcRequest(rpcUrl, method, JSON.parse(params));
       setResponse(parseHexResponse(data));
     } catch (err) {
       setError(err.message);
@@ -23,6 +25,8 @@ export function App() {
   return (
     <div style={{ padding: '20px', maxWidth: '800px', margin: '0 auto' }}>
       <h1>RPC UI</h1>
+
+      <RpcHealth rpcUrl={rpcUrl} />
 
       <div style={{ marginBottom: '20px' }}>
         <input
