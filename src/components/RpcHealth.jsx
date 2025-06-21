@@ -6,18 +6,15 @@ export function RpcHealth({ rpcUrl }) {
   const [info, setInfo] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  const checkHealth = async () => {
+    setLoading(true);
+    const result = await fetchRpcInfo(rpcUrl);
+    setInfo(result);
+    setLoading(false);
+  };
+
   useEffect(() => {
-    const checkHealth = async () => {
-      setLoading(true);
-      const result = await fetchRpcInfo(rpcUrl);
-      setInfo(result);
-      setLoading(false);
-    };
-
     checkHealth();
-    const interval = setInterval(checkHealth, 30000); // Check every 30 seconds
-
-    return () => clearInterval(interval);
   }, [rpcUrl]);
 
   if (loading) {
@@ -42,12 +39,15 @@ export function RpcHealth({ rpcUrl }) {
       border: `1px solid ${info.status === 'healthy' ? '#4caf50' : '#f44336'}`
     }}>
       
-      <h3 style={{ margin: '0 0 10px 0' }}>
-        <span>Status:</span>
-        &nbsp;
-        <span>
-          {info.status}
-        </span>
+      <h3 style={{ margin: '0 0 10px 0', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <div>
+          <span>Status:</span>
+          &nbsp;
+          <span>
+            {info.status}
+          </span>
+        </div>
+        <button onClick={checkHealth}>Refresh</button>
       </h3>
       
       {info.status === 'healthy' ? (
