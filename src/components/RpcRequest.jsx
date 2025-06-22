@@ -69,8 +69,8 @@ export function RpcRequest({ rpcUrl, onRpcUrlChange, title = "RPC Request" }) {
       </h2>
 
       <div style={{ marginBottom: '25px' }}>
-        <div style={{ display: 'flex', gap: '12px', alignItems: 'flex-end', marginBottom: '12px' }}>
-          <div style={{ flex: 2 }}>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', alignItems: 'flex-end', marginBottom: '12px' }}>
+          <div style={{ flex: '1 1 220px', minWidth: 0 }}>
             <label style={{ 
               display: 'block', 
               marginBottom: '8px', 
@@ -97,7 +97,9 @@ export function RpcRequest({ rpcUrl, onRpcUrlChange, title = "RPC Request" }) {
                 fontSize: '0.95rem',
                 backgroundColor: 'white',
                 transition: 'border-color 0.2s ease',
-                outline: 'none'
+                outline: 'none',
+                boxSizing: 'border-box',
+                minWidth: 0
               }}
               onFocus={(e) => e.target.style.borderColor = '#3b82f6'}
               onBlur={(e) => e.target.style.borderColor = '#e5e7eb'}
@@ -109,7 +111,7 @@ export function RpcRequest({ rpcUrl, onRpcUrlChange, title = "RPC Request" }) {
             </select>
           </div>
           {(!predefinedMethods.some(({ value }) => value === method)) && (
-            <div style={{ flex: 3 }}>
+            <div style={{ flex: '2 1 220px', minWidth: 0 }}>
               <label style={{ 
                 display: 'block', 
                 marginBottom: '8px', 
@@ -132,7 +134,9 @@ export function RpcRequest({ rpcUrl, onRpcUrlChange, title = "RPC Request" }) {
                   borderRadius: '8px',
                   fontSize: '0.95rem',
                   transition: 'border-color 0.2s ease',
-                  outline: 'none'
+                  outline: 'none',
+                  boxSizing: 'border-box',
+                  minWidth: 0
                 }}
                 onFocus={(e) => e.target.style.borderColor = '#3b82f6'}
                 onBlur={(e) => e.target.style.borderColor = '#e5e7eb'}
@@ -152,19 +156,24 @@ export function RpcRequest({ rpcUrl, onRpcUrlChange, title = "RPC Request" }) {
         }}>
           Parameters (JSON array):
         </label>
-        <input
-          type="text"
+        <textarea
           value={params}
           onChange={(e) => setParams(e.target.value)}
           placeholder="Enter Params (JSON array)"
+          rows={3}
           style={{ 
-            width: '100%', 
+            width: '100%',
+            minWidth: 0,
+            maxWidth: '100%',
+            boxSizing: 'border-box',
             padding: '12px 16px',
             border: '2px solid #e5e7eb',
             borderRadius: '8px',
             fontSize: '0.95rem',
             transition: 'border-color 0.2s ease',
-            outline: 'none'
+            outline: 'none',
+            resize: 'vertical',
+            overflowWrap: 'break-word'
           }}
           onFocus={(e) => e.target.style.borderColor = '#3b82f6'}
           onBlur={(e) => e.target.style.borderColor = '#e5e7eb'}
