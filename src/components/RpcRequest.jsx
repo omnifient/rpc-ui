@@ -1,5 +1,5 @@
 import { h } from 'preact';
-import { useState } from 'preact/hooks';
+import { useState, useMemo } from 'preact/hooks';
 import { sendRpcRequest, generateCurlCommand, parseResponseByMethod } from '../utils/rpc';
 
 export function RpcRequest({ rpcUrl, onRpcUrlChange, title = "RPC Request" }) {
@@ -8,6 +8,18 @@ export function RpcRequest({ rpcUrl, onRpcUrlChange, title = "RPC Request" }) {
   const [response, setResponse] = useState(null);
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+
+  const predefinedMethods = useMemo(() => [
+    { value: 'eth_blockNumber', label: 'Get Block Number', exampleParams: '[]' },
+    { value: 'eth_chainId', label: 'Get Chain ID', exampleParams: '[]' },
+    { value: 'eth_gasPrice', label: 'Get Gas Price', exampleParams: '[]' },
+    { value: 'eth_getBalance', label: 'Get Balance', exampleParams: '["0xde0b295669a9fd93d5f28d9ec85e40f4cb697bae", "latest"]' },
+    { value: 'eth_getTransactionCount', label: 'Get Transaction Count', exampleParams: '["0xde0b295669a9fd93d5f28d9ec85e40f4cb697bae", "latest"]' },
+    { value: 'eth_getBlockByNumber', label: 'Get Block By Number', exampleParams: '["latest", true]' },
+    { value: 'eth_getTransactionByHash', label: 'Get Transaction By Hash', exampleParams: '["0xbb3a336e3f823ec18197f1e13ee875700f08f03e2cab75f0d0b118dabb44cba0"]' },
+    { value: 'eth_call', label: 'Call Contract', exampleParams: '[{"to": "0x5aAeb6053F3E94C9b9A09f33669435E7Ef1BeAed", "data": "0x..."}, "latest"]' },
+    { value: 'eth_estimateGas', label: 'Estimate Gas', exampleParams: '[{"to": "0x...", "from": "0x...", "value": "0x..."}]' },
+  ], []);
 
   const handleSendRequest = async () => {
     try {
@@ -26,31 +38,17 @@ export function RpcRequest({ rpcUrl, onRpcUrlChange, title = "RPC Request" }) {
 
   const handleMethodChange = (newMethod) => {
     setMethod(newMethod);
-    // Reset params for certain methods
-    if (newMethod === 'eth_blockNumber' || newMethod === 'eth_chainId' || newMethod === 'eth_gasPrice') {
+    const selectedMethod = predefinedMethods.find(m => m.value === newMethod);
+    if (selectedMethod) {
+      setParams(selectedMethod.exampleParams);
+    } else {
       setParams('[]');
-    } else if (newMethod === 'eth_getBalance') {
-      setParams('["0x742d35Cc6634C0532925a3b8D4C9db96C4b4d8b6", "latest"]');
-    } else if (newMethod === 'eth_getTransactionCount') {
-      setParams('["0x742d35Cc6634C0532925a3b8D4C9db96C4b4d8b6", "latest"]');
-    } else if (newMethod === 'eth_getBlockByNumber') {
-      setParams('["latest", false]');
-    } else if (newMethod === 'eth_getTransactionByHash') {
-      setParams('["0x88df016429689c079f3b2f6ad39fa052532c56795b733da78a91ebe6a713944b"]');
     }
   };
 
-  const predefinedMethods = [
-    { value: 'eth_blockNumber', label: 'Get Block Number' },
-    { value: 'eth_chainId', label: 'Get Chain ID' },
-    { value: 'eth_gasPrice', label: 'Get Gas Price' },
-    { value: 'eth_getBalance', label: 'Get Balance' },
-    { value: 'eth_getTransactionCount', label: 'Get Transaction Count' },
-    { value: 'eth_getBlockByNumber', label: 'Get Block By Number' },
-    { value: 'eth_getTransactionByHash', label: 'Get Transaction By Hash' },
-    { value: 'eth_call', label: 'Call Contract' },
-    { value: 'eth_estimateGas', label: 'Estimate Gas' },
-  ];
+  const currentMethodData = useMemo(() => (
+    predefinedMethods.find(m => m.value === method)
+  ), [method, predefinedMethods]);
 
   return (
     <div style={{
@@ -181,10 +179,19 @@ export function RpcRequest({ rpcUrl, onRpcUrlChange, title = "RPC Request" }) {
         <div style={{ 
           fontSize: '0.85rem', 
           color: '#6b7280', 
-          marginTop: '6px',
-          fontStyle: 'italic'
+          marginTop: '8px',
+          fontStyle: 'italic',
+          backgroundColor: '#f8fafc',
+          padding: '8px 12px',
+          borderRadius: '6px',
+          border: '1px solid #e5e7eb',
+          minHeight: '1.2em'
         }}>
-          Examples: [] for no params, ["0x123..."] for address, ["0x123...", "latest"] for address + block
+          {currentMethodData ? (
+            <span>Example: <code style={{ color: '#475569', fontWeight: '500' }}>{currentMethodData.exampleParams}</code></span>
+          ) : (
+            <span>No example available for this method.</span>
+          )}
         </div>
       </div>
 
