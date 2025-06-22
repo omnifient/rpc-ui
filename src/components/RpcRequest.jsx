@@ -224,15 +224,15 @@ export function RpcRequest({ rpcUrl, onRpcUrlChange, title = "RPC Request" }) {
         </div>
       )}
 
-      <div>
-        <h3 style={{ 
-          margin: '0 0 15px 0',
+      <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+        <h4 style={{ 
+          margin: '0',
           color: '#1e293b',
-          fontSize: '1.3rem',
+          fontSize: '1rem',
           fontWeight: '600'
         }}>
           cURL Command:
-        </h3>
+        </h4>
         <pre style={{ 
           backgroundColor: '#f8fafc', 
           padding: '20px', 
@@ -240,7 +240,8 @@ export function RpcRequest({ rpcUrl, onRpcUrlChange, title = "RPC Request" }) {
           overflow: 'auto',
           fontSize: '0.8rem',
           border: '1px solid #e5e7eb',
-          lineHeight: '1.4'
+          lineHeight: '1.4',
+          flex: 1
         }}>
           {generateCurlCommand(rpcUrl, method, params)}
         </pre>

@@ -2,11 +2,13 @@ import { h } from 'preact';
 import { useState } from 'preact/hooks';
 import { RpcHealth } from './components/RpcHealth';
 import { RpcRequest } from './components/RpcRequest';
+import { DecToHex } from './components/DecToHex';
 
 export function App() {
   const [rpcUrl, setRpcUrl] = useState('https://eth.llamarpc.com');
   const [healthData, setHealthData] = useState(null);
   const [healthLoading, setHealthLoading] = useState(false);
+  const [showDecToHex, setShowDecToHex] = useState(false);
 
   const handleRpcUrlChange = (newUrl) => {
     setRpcUrl(newUrl);
@@ -27,9 +29,9 @@ export function App() {
   };
 
   return (
-    <div style={{ 
-      padding: '30px', 
-      maxWidth: '1000px', 
+    <div style={{
+      padding: '30px',
+      maxWidth: '1000px',
       margin: '0 auto',
       fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
       backgroundColor: '#f8fafc',
@@ -42,8 +44,8 @@ export function App() {
         boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
         marginBottom: '30px'
       }}>
-        <h1 style={{ 
-          margin: '0 0 30px 0', 
+        <h1 style={{
+          margin: '0 0 30px 0',
           color: '#1e293b',
           fontSize: '2.5rem',
           fontWeight: '700',
@@ -53,9 +55,9 @@ export function App() {
         </h1>
 
         <div style={{ marginBottom: '25px' }}>
-          <label style={{ 
-            display: 'block', 
-            marginBottom: '8px', 
+          <label style={{
+            display: 'block',
+            marginBottom: '8px',
             fontWeight: '600',
             color: '#374151',
             fontSize: '0.95rem'
@@ -68,9 +70,9 @@ export function App() {
               value={rpcUrl}
               onChange={(e) => handleRpcUrlChange(e.target.value)}
               placeholder="Enter RPC URL"
-              style={{ 
+              style={{
                 flex: 1,
-                padding: '12px 16px', 
+                padding: '12px 16px',
                 border: '2px solid #e5e7eb',
                 borderRadius: '8px',
                 fontSize: '0.95rem',
@@ -106,8 +108,30 @@ export function App() {
 
       <RpcHealth healthData={healthData} />
 
-      <RpcRequest 
-        rpcUrl={rpcUrl} 
+      <div style={{ marginTop: '15px', marginBottom: '15px', textAlign: 'center' }}>
+        <button
+          onClick={() => setShowDecToHex(!showDecToHex)}
+          style={{
+            padding: '8px 16px',
+            backgroundColor: '#f1f5f9',
+            color: '#475569',
+            border: '1px solid #e2e8f0',
+            borderRadius: '8px',
+            cursor: 'pointer',
+            fontWeight: '600',
+            fontSize: '0.85rem',
+            transition: 'background-color 0.2s ease'
+          }}
+          onMouseEnter={(e) => e.target.style.backgroundColor = '#e2e8f0'}
+          onMouseLeave={(e) => e.target.style.backgroundColor = '#f1f5f9'}
+        >
+          {showDecToHex ? 'Hide' : 'Show'} Decimal to Hex Converter
+        </button>
+      </div>
+      {showDecToHex && <DecToHex />}
+
+      <RpcRequest
+        rpcUrl={rpcUrl}
         onRpcUrlChange={handleRpcUrlChange}
         title="RPC Request"
       />
