@@ -1,11 +1,15 @@
-TODO:
-- auto convert to hex
-- auto decode
-- timestamps
-- convert params decimal to hex
+# RPC UI
 
-https://ethereum.stackexchange.com/questions/139841/what-are-the-best-online-tools-to-easily-make-json-rpc-calls
-https://www.quicknode.com/docs/ethereum/eth_getBlockByNumber
+A UI for interacting with the RPC.
 
-https://eth.llamarpc.com
-https://binance.llamarpc.com
+Also shows the health.
+
+Made by cursor.
+
+
+## instructions
+
+`npm run dev`
+`npm run preview`
+
+`npm run build`
