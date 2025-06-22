@@ -69,53 +69,77 @@ export function RpcRequest({ rpcUrl, onRpcUrlChange, title = "RPC Request" }) {
       </h2>
 
       <div style={{ marginBottom: '25px' }}>
-        <label style={{ 
-          display: 'block', 
-          marginBottom: '8px', 
-          fontWeight: '600',
-          color: '#374151',
-          fontSize: '0.95rem'
-        }}>
-          Method:
-        </label>
-        <select
-          value={method}
-          onChange={(e) => handleMethodChange(e.target.value)}
-          style={{ 
-            width: '100%', 
-            padding: '12px 16px', 
-            marginBottom: '12px',
-            border: '2px solid #e5e7eb',
-            borderRadius: '8px',
-            fontSize: '0.95rem',
-            backgroundColor: 'white',
-            transition: 'border-color 0.2s ease',
-            outline: 'none'
-          }}
-          onFocus={(e) => e.target.style.borderColor = '#3b82f6'}
-          onBlur={(e) => e.target.style.borderColor = '#e5e7eb'}
-        >
-          {predefinedMethods.map(({ value, label }) => (
-            <option key={value} value={value}>{label} ({value})</option>
-          ))}
-        </select>
-        <input
-          type="text"
-          value={method}
-          onChange={(e) => setMethod(e.target.value)}
-          placeholder="Or enter custom method"
-          style={{ 
-            width: '100%', 
-            padding: '12px 16px',
-            border: '2px solid #e5e7eb',
-            borderRadius: '8px',
-            fontSize: '0.95rem',
-            transition: 'border-color 0.2s ease',
-            outline: 'none'
-          }}
-          onFocus={(e) => e.target.style.borderColor = '#3b82f6'}
-          onBlur={(e) => e.target.style.borderColor = '#e5e7eb'}
-        />
+        <div style={{ display: 'flex', gap: '12px', alignItems: 'flex-end', marginBottom: '12px' }}>
+          <div style={{ flex: 2 }}>
+            <label style={{ 
+              display: 'block', 
+              marginBottom: '8px', 
+              fontWeight: '600',
+              color: '#374151',
+              fontSize: '0.95rem'
+            }}>
+              Method:
+            </label>
+            <select
+              value={predefinedMethods.some(({ value }) => value === method) ? method : 'custom'}
+              onChange={(e) => {
+                if (e.target.value === 'custom') {
+                  setMethod('');
+                } else {
+                  handleMethodChange(e.target.value);
+                }
+              }}
+              style={{ 
+                width: '100%', 
+                padding: '12px 16px', 
+                border: '2px solid #e5e7eb',
+                borderRadius: '8px',
+                fontSize: '0.95rem',
+                backgroundColor: 'white',
+                transition: 'border-color 0.2s ease',
+                outline: 'none'
+              }}
+              onFocus={(e) => e.target.style.borderColor = '#3b82f6'}
+              onBlur={(e) => e.target.style.borderColor = '#e5e7eb'}
+            >
+              {predefinedMethods.map(({ value, label }) => (
+                <option key={value} value={value}>{label} ({value})</option>
+              ))}
+              <option value="custom">Custom call</option>
+            </select>
+          </div>
+          {(!predefinedMethods.some(({ value }) => value === method)) && (
+            <div style={{ flex: 3 }}>
+              <label style={{ 
+                display: 'block', 
+                marginBottom: '8px', 
+                fontWeight: '600',
+                color: '#374151',
+                fontSize: '0.95rem',
+                visibility: 'hidden' // visually aligns with select label
+              }}>
+                &nbsp;
+              </label>
+              <input
+                type="text"
+                value={method}
+                onChange={(e) => setMethod(e.target.value)}
+                placeholder="Enter custom method"
+                style={{ 
+                  width: '100%', 
+                  padding: '12px 16px',
+                  border: '2px solid #e5e7eb',
+                  borderRadius: '8px',
+                  fontSize: '0.95rem',
+                  transition: 'border-color 0.2s ease',
+                  outline: 'none'
+                }}
+                onFocus={(e) => e.target.style.borderColor = '#3b82f6'}
+                onBlur={(e) => e.target.style.borderColor = '#e5e7eb'}
+              />
+            </div>
+          )}
+        </div>
       </div>
 
       <div style={{ marginBottom: '25px' }}>
@@ -191,6 +215,28 @@ export function RpcRequest({ rpcUrl, onRpcUrlChange, title = "RPC Request" }) {
         </div>
       )}
 
+      <div>
+        <h3 style={{ 
+          margin: '0 0 15px 0',
+          color: '#1e293b',
+          fontSize: '1.3rem',
+          fontWeight: '600'
+        }}>
+          cURL Command:
+        </h3>
+        <pre style={{ 
+          backgroundColor: '#f8fafc', 
+          padding: '20px', 
+          borderRadius: '8px',
+          overflow: 'auto',
+          fontSize: '0.8rem',
+          border: '1px solid #e5e7eb',
+          lineHeight: '1.4'
+        }}>
+          {generateCurlCommand(rpcUrl, method, params)}
+        </pre>
+      </div>
+
       {response && (
         <>
           <div style={{ marginBottom: '25px' }}>
@@ -242,28 +288,6 @@ export function RpcRequest({ rpcUrl, onRpcUrlChange, title = "RPC Request" }) {
           )}
         </>
       )}
-
-      <div>
-        <h3 style={{ 
-          margin: '0 0 15px 0',
-          color: '#1e293b',
-          fontSize: '1.3rem',
-          fontWeight: '600'
-        }}>
-          cURL Command:
-        </h3>
-        <pre style={{ 
-          backgroundColor: '#f8fafc', 
-          padding: '20px', 
-          borderRadius: '8px',
-          overflow: 'auto',
-          fontSize: '0.8rem',
-          border: '1px solid #e5e7eb',
-          lineHeight: '1.4'
-        }}>
-          {generateCurlCommand(rpcUrl, method, params)}
-        </pre>
-      </div>
     </div>
   );
 } 
