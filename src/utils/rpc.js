@@ -1,4 +1,5 @@
 export const sendRpcRequest = async (rpcUrl, method, params) => {
+  const id = Date.now();
   const response = await fetch(rpcUrl, {
     method: 'POST',
     headers: {
@@ -8,6 +9,7 @@ export const sendRpcRequest = async (rpcUrl, method, params) => {
       jsonrpc: '2.0',
       method,
       params: params,
+      id,
     }),
   });
 
@@ -15,7 +17,8 @@ export const sendRpcRequest = async (rpcUrl, method, params) => {
 };
 
 export const generateCurlCommand = (rpcUrl, method, params) => {
-  return `curl -X POST -H "Content-Type: application/json" -d '{"jsonrpc":"2.0","method":"${method}","params":${params || '[]'}}' ${rpcUrl}`;
+  const id = Date.now();
+  return `curl -X POST -H "Content-Type: application/json" -d '{"jsonrpc":"2.0","method":"${method}","params":${params || '[]'},"id":${id}}' ${rpcUrl}`;
 };
 
 export const parseHexResponse = (response) => {
